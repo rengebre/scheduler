@@ -2,19 +2,16 @@ import React from 'react';
 import DayListItem from './DayListItem';
 
 const DayList = function (props) {
-  const { days, day, setDay } = props;
+
+  console.log(props);
+  
+  const { days, value, onChange } = props;
 
   const dayListItemArray = days.map((elm) => {
-    let selected = false;
-
-    if (elm.name === day) {
-      selected = true;
-    }
-
     const props = { 
       ...elm,
-      setDay,
-      selected
+      setDay: onChange,
+      selected: (elm.name === value)
     }
 
     return (

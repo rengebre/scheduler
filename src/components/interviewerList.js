@@ -3,19 +3,14 @@ import InterviewerListItem from './InterviewerListItem';
 import "components/InterviewerList.scss"
 
 const InterviewerList = function(props) {
-  const { interviewers, setInterviewer, interviewer } = props;
+  const { interviewers, onChange, value } = props;
   
   const interviewerListArray = interviewers.map((elm) => {
-    let selected = false;
-
-    if (interviewer === elm.id) {
-      selected = true;
-    }
 
     const props = {
       ...elm,
-      setInterviewer: () => setInterviewer(elm.id),
-      selected
+      setInterviewer: () => onChange(elm.id),
+      selected: (elm.id === value)
     }
 
     return (
