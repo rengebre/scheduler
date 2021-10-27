@@ -14,7 +14,7 @@ const InterviewerList = function(props) {
 
     const props = {
       ...elm,
-      setInterviewer,
+      setInterviewer: () => setInterviewer(elm.id),
       selected
     }
 
