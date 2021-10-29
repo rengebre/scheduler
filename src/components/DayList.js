@@ -2,13 +2,11 @@ import React from 'react';
 import DayListItem from './DayListItem';
 
 const DayList = function (props) {
-
-  console.log(props);
   
   const { days, value, onChange } = props;
 
   const dayListItemArray = days.map((elm) => {
-    const props = { 
+    const dayListProps = { 
       ...elm,
       setDay: onChange,
       selected: (elm.name === value)
@@ -17,7 +15,7 @@ const DayList = function (props) {
     return (
       <DayListItem
         key={elm.id}
-        {...props}
+        {...dayListProps}
       />
     ) 
   });
