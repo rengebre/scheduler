@@ -4,58 +4,28 @@ import axios from "axios";
 import "components/Application.scss";
 import DayList from "./DayList";
 import Appointment from "./Appointment";
-import { getAppointmentsForDay } from "helpers/selectors";
-
-// const appointments = [
-//   {
-//     id: 1,
-//     time: "12pm",
-//   },
-//   {
-//     id: 2,
-//     time: "1pm",
-//     interview: {
-//       student: "Lydia Miller-Jones",
-//       interviewer:{
-//         id: 3,
-//         name: "Sylvia Palmer",
-//         avatar: "https://i.imgur.com/LpaY82x.png",
-//       }
-//     }
-//   },
-//   {
-//     id: 3,
-//     time: "2pm",
-//   },
-//   {
-//     id: 4,
-//     time: "3pm",
-//     interview: {
-//       student: "Archie Andrews",
-//       interviewer:{
-//         id: 4,
-//         name: "Cohana Roy",
-//         avatar: "https://i.imgur.com/FK8V841.jpg",
-//       }
-//     }
-//   },
-//   {
-//     id: 5,
-//     time: "4pm",
-//   }
-// ];
+import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 
 export default function Application(props) {
 
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    appointments: {}
+    appointments: {},
+    interviewers: {}
   })
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
-  const appointmentArray = dailyAppointments.map(elm => <Appointment key={elm.id} {...elm}/>);
+  const appointmentArray = dailyAppointments.map(elm => {
+    const interview = getInterview(state, elm.interview);
+    const appointmentProps = {
+      ...elm,
+      interview
+    }
+
+    return (<Appointment key={elm.id} {...appointmentProps}/>);
+  });
 
   const setDay = day => setState(prev => ({...prev, day}));
 
@@ -69,11 +39,14 @@ export default function Application(props) {
       .then((response) => {
         let days = response[0].data;
         let appointments = response[1].data;
+        let interviewers = response[2].data;
+
         setState(prev => {
           return {
             ...prev,
             days,
-            appointments
+            appointments,
+            interviewers
           }
         });
       })
