@@ -2,12 +2,21 @@ import React from "react";
 import Header from "./Header";
 import Show from "./Show";
 import Empty from "./Empty";
+import Form from "./Form";
+import useVisualMode from "hooks/useVisualMode";
 
 import "./styles.scss";
 
 const Appointment = function(props) {
-  const { id, time, interview } = props;
-  let showProps = {}
+  const { time, interview, interviewers } = props;
+  let showProps = {};
+  const EMPTY = "EMPTY";
+  const SHOW = "SHOW";
+  const CREATE = "CREATE";
+
+  const { mode, transition, back } = useVisualMode(
+    interview ? SHOW : EMPTY
+  );
   
   if (interview) {
     showProps = {
@@ -16,10 +25,18 @@ const Appointment = function(props) {
     }
   }
 
+  const formProps = {
+    interviewers,
+    onCancel: () => back(),
+    onSave: () => console.log("Clicked Save")
+  }
+
   return (
     <article className="appointment">
       <Header time={time}/>
-      {interview ? <Show {...showProps} /> : <Empty />}
+      {mode === EMPTY && <Empty onAdd={() => transition(CREATE)}/>}
+      {mode === SHOW && <Show {...showProps} />}
+      {mode === CREATE && <Form {...formProps}/>}
     </article>
   )
 }
