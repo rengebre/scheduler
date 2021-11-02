@@ -9,12 +9,13 @@ const useVisualMode = function(initial) {
   const transition = function(mode, replace) {
     setState((prev) => {
       const history = [...prev.history];
-      
+
       // replace boolean check. don't add prev mode to history if you want to replace the prev mode with the current one
       if (!replace) {
         history.push(prev.mode);
       }
 
+      console.log(history)
       return {
         ...prev,
         mode,
@@ -29,9 +30,10 @@ const useVisualMode = function(initial) {
       if (prev.history.length < 1) {
         return {...prev};
       }
-
+      
       const history = [...prev.history]
       const mode = history.pop();
+      console.log(history)
       return {
         ...prev,
         mode,
