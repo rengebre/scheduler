@@ -15,7 +15,6 @@ const useVisualMode = function(initial) {
         history.push(prev.mode);
       }
 
-      console.log(history)
       return {
         ...prev,
         mode,
@@ -33,7 +32,6 @@ const useVisualMode = function(initial) {
       
       const history = [...prev.history]
       const mode = history.pop();
-      console.log(history)
       return {
         ...prev,
         mode,
