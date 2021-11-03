@@ -56,23 +56,53 @@ describe("Form", () => {
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
   });
-  
-  it("calls onSave function when the name is defined", () => {
+
+  it("can successfully save after trying to submit an empty student name", () => {
     const onSave = jest.fn();
-
-    const formProps = {
-      interviewers,
-      onSave,
-      student: "Lydia Miller-Jones",
-      interviewer: 2
-    }
-
-    const { queryByText, getByText } = render(<Form {...formProps}/>)
-
-    fireEvent.click(getByText(/save/i))
-
+    const { getByText, getByPlaceholderText, queryByText } = render(
+      <Form interviewers={interviewers} interviewer={2} onSave={onSave} />
+    );
+  
+    fireEvent.click(getByText("Save"));
+  
+    expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
+    expect(onSave).not.toHaveBeenCalled();
+  
+    fireEvent.change(getByPlaceholderText("Enter Student Name"), {
+      target: { value: "Lydia Miller-Jones" }
+    });
+  
+    fireEvent.click(getByText("Save"));
+  
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
+  
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", 2);
+  });
+  
+  it("calls onCancel and resets the input field", () => {
+    const onCancel = jest.fn();
+    const { getByText, getByPlaceholderText, queryByText } = render(
+      <Form
+        interviewers={interviewers}
+        name="Lydia Mill-Jones"
+        onSave={jest.fn()}
+        onCancel={onCancel}
+      />
+    );
+  
+    fireEvent.click(getByText("Save"));
+  
+    fireEvent.change(getByPlaceholderText("Enter Student Name"), {
+      target: { value: "Lydia Miller-Jones" }
+    });
+  
+    fireEvent.click(getByText("Cancel"));
+  
+    expect(queryByText(/student name cannot be blank/i)).toBeNull();
+  
+    expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
+  
+    expect(onCancel).toHaveBeenCalledTimes(1);
   });
 });

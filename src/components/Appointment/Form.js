@@ -13,6 +13,7 @@ const Form = function(props) {
   const reset = function() {
     setStudent(() => "");
     setInterviewer(() => null);
+    setError("");
   }
 
   const cancel = function() {
@@ -30,7 +31,8 @@ const Form = function(props) {
       setError("You must select an interviewer");
       return;
     }
-  
+    
+    setError("");
     onSave(student, interviewer);
   }
 
