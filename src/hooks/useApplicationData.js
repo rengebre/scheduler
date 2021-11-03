@@ -9,8 +9,15 @@ const useApplicationData = function() {
     interviewers: {}
   })
 
-  // return the most recent count of available spots prior to adding or deleting an interview
-  const updateSpots = function(day, appointments, days) {
+  // calculate the amount of spots available for the day and return the updated days state variable to setState with.
+  // @params: state.day, state.appointments, state.days, isDelete -> (true if cancelling interview, false or left out otherwise)
+  const updateSpots = function(state, id, isDelete) {
+    const { day, appointments, days } = state;
+
+    if (appointments[id].interview && !isDelete) {
+      return [...days];
+    }
+
     for (let i = 0; i < days.length; i++) {
       if (days[i].name === day) {
         let counter = 0; 
@@ -20,27 +27,21 @@ const useApplicationData = function() {
           }
         });
 
-        return { spots: counter, index: i };
+        // increment/decrement to include current appointment cancelation/booking
+        isDelete ? counter++ : counter--;
+
+        const returnDay = {
+          ...days[i],
+          spots: counter
+        }
+    
+        let returnDays = [...days]
+        returnDays[i] = returnDay;
+
+        return returnDays;
       }
     }
   }
-
-  // restructure the days state value to pass to setState to update the spots value to reflect adding or removing of interviews. returns the day element. If cancelling an interview, cancel=true, if booking, cancel=false
-  const updateStateOnSpotChange = function(cancel) {
-    let { spots, index } = updateSpots(state.day, state.appointments, state.days);
-    cancel ? spots++ : spots--;
-
-    const day = {
-      ...state.days[index],
-      spots
-    }
-
-    let days = [...state.days]
-    days[index] = day;
-
-    return days;
-  }
-
 
   const setDay = day => setState(prev => ({...prev, day}));
 
@@ -56,7 +57,7 @@ const useApplicationData = function() {
       [id]: appointment
     };
 
-    const days = updateStateOnSpotChange();
+    const days = updateSpots(state, id, false);
 
     return (
       axios
@@ -85,7 +86,7 @@ const useApplicationData = function() {
       [id]: appointment
     }
 
-    const days = updateStateOnSpotChange(true);
+    const days = updateSpots(state, id, true);
 
     return (
       axios

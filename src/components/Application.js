@@ -30,7 +30,7 @@ export default function Application() {
 
     return (<Appointment key={elm.id} {...appointmentProps}/>);
   });
-
+  
   return (
     <main className="layout">
       <section className="sidebar">

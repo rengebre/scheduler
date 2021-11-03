@@ -1,4 +1,5 @@
 import React from "react";
+
 import Header from "./Header";
 import Show from "./Show";
 import Empty from "./Empty";
@@ -23,7 +24,6 @@ const Appointment = function(props) {
   const ERROR_SAVING = "ERROR_SAVING";
   const ERROR_DELETE = "ERROR_DELETE";
 
-  
   // navigation between states
   const { mode, transition, back } = useVisualMode(
     interview ? SHOW : EMPTY
@@ -50,7 +50,7 @@ const Appointment = function(props) {
   };
     
   const deleteInterview = function() {
-    //transition to EMPTY, also delete the current show field so it doesn't get stuck in our history array 5 evers
+    // Switch to deleting page, removing the confirm page from our history array
     transition(DELETING, true)
     cancelInterview(id)
     .then(() => {
