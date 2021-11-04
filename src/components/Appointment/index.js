@@ -110,7 +110,7 @@ const Appointment = function(props) {
       {mode === SHOW && <Show {...showProps} />}
       {mode === CREATE && <Form {...formProps}/>}
       {mode === SAVING && <Status message={"Saving"}/>}
-      {mode === DELETING && <Status message={"DELETING"}/>}
+      {mode === DELETING && <Status message={"Deleting"}/>}
       {mode === CONFIRM && <Confirm {...confirmProps}/>}
       {mode === ERROR_SAVING && <Error {...errorSavingProps}/>}
       {mode === ERROR_DELETE && <Error {...errorDeleteProps}/>}
